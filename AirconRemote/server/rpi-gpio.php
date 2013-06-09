@@ -29,6 +29,13 @@ function runGPIO() {
 	return 'Failed.<br>Status: [LED on]' . $response1 . ' / [LED off]' . $response2;
 }
 
+function getTEMP() {
+	global $webiopi_host, $webiopi_user, $webiopi_passwd, $webiopi_gpio;
+	$req = new HTTP_Request2('http://'.$webiopi_host.'/room/temperature', HTTP_Request2::METHOD_GET);
+	$req->setAuth($webiopi_user, $webiopi_passwd, HTTP_Request2::AUTH_BASIC);
+	return $req->send()->getBody();	
+}
+
 /* for AT command. */
 if (isset($argv[1]) && $argv[1] == 'at') {
 	runGPIO();
@@ -73,11 +80,7 @@ if (isset($_GET['timer']) || isset($_POST['timerset'])) {
 }
 
 /* Temperature */
-/* This will rewrite to use temperature-pi
- * https://github.com/ronanguilloux/temperature-pi
- */
-/*
-exec('/usr/bin/getTemp -t', $temp);
+$temp = getTEMP();
 $temp = $temp[0];
 if (isset($_GET['temp'])) {
 	if (isset($_GET['api']) && $_GET['api'] == 1) {
@@ -91,7 +94,7 @@ if (17 < $temp) { $tempicon = "error.png";  }
 if (21 < $temp) { $tempicon = "accept.png"; }
 if (28 < $temp) { $tempicon = "error.png";  }
 if (30 < $temp) { $tempicon = "delete.png"; }
-*/
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">
