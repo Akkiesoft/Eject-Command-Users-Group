@@ -1,4 +1,3 @@
-
 ----------------------------------------------------------------------
  	エアコンリモート用Ejectスクリプト(PHP)
 		(c) 2012 Akkiesoft / Ejectコマンドユーザー会
@@ -38,6 +37,9 @@ atdサービスを起動している必要があります。
 
 (書き換え前) apache:x:48:48:Apache:/var/www:/sbin/nologin
 (書き換え後) apache:x:48:48:Apache:/var/www:/bin/bash
+
+□Debian/Ubuntuの場合
+/etc/at.denyからwww-dataを削除します。
 
 
 ■室温表示について
