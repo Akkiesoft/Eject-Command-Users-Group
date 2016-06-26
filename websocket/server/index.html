@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    $(function() {
+      var socket = io.connect();
+      // ボタンがクリックされた
+      $("#doEject").click( function() {
+        socket.emit('web2srv_eject');
+        return false;
+      });
+      // 3秒ごとにサーバーに対してBOTのステータスを問い合わせる
+      socket.on('checkbot_ret', function(data) {
+        $("#status").html(data);
+        if (data == "Ready") { $("#doEject").show(); }
+        else { $("#doEject").hide(); }
+      });
+      setInterval(function(){ socket.emit('checkbot', 'check') }, 3000);
+      socket.emit('checkbot', 'check');
+      // 接続・再接続・切断時のメッセージ表示
+      socket.on('connect', function () {
+        $("#svstat").html("Connnected");
+      });
+      socket.on('reconnect', function () {
+        $("#svstat").html("Connected");
+      });
+      socket.on('disconnect', function () {
+        $("#svstat").html("Disconnected");
+        $("#status").html("");
+        $("#doEject").hide();
+      });
+    });
+  </script>
+</head>
+<body>
+  Server status: <span id="svstat"></span><br>
+  Optical drive status: <span id="status"></span><br>
+  <button id="doEject" style="display:none;">UIIIN</button>
+</body>
+</html>
