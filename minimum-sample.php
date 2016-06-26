@@ -1,9 +1,9 @@
 <?php
 session_start();
 if (isset($_POST['open'])) {
-	$ret = exec('/usr/sbin/eject -T /dev/sr0');
+	$ret = exec('/usr/bin/eject -T /dev/sr0');
 	$ret = ($ret == "") ? "Success." : "Failure.";
-	$_SESSION['result'] = '<div id="result">Open ' . $result . '</div>';
+	$_SESSION['result'] = '<div id="result">Open ' . $ret . '</div>';
 	header('Location:./');
 	exit();
 }
