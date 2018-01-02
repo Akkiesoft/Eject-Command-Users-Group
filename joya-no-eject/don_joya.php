@@ -34,13 +34,6 @@ if (isset($_GET['code'])) {
 	$result = json_decode(curl_exec($ch));
 	curl_close($ch);
 	$_SESSION['token'] = $result->access_token;
-} else {
-	include 'htmlhead.inc.php';
-	print <<<EOM
-トークンが取れなかったっぽいです。
-EOM;
-	include 'htmlfoot.inc.php';
-	exit();
 }
 
 $ejectcount = intval(file_get_contents('count.dat'));

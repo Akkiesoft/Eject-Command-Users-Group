@@ -14,15 +14,15 @@ if ($_POST['login']) {
     include("htmlfoot.inc.php");
     exit();
   }
-  $app = create_app($scheme, $domain);
+  $app = create_app($_SESSION['scheme'], $_SESSION['domain']);
 
   $data = array(
     "response_type"    => "code",
     "redirect_uri"     => $callback,
     "scope"            => $scope,
-    "client_id"        => $client_id
+    "client_id"        => $app->client_id
   );
-  header("Location: ".$scheme."://".$domain."/oauth/authorize?".http_build_query($data));
+  header("Location: ".$_SESSION['scheme']."://".$_SESSION['domain']."/oauth/authorize?".http_build_query($data));
 }
 
 function create_app($scheme, $domain) {
