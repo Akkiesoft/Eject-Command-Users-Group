@@ -9,6 +9,9 @@ $kuru_year = $yuku_year + 1;
 // limit
 $limit = 108 + 1;
 
+// Start time
+$start_time = "21";
+
 // Eject API URL
 $eject_url = "";
 
