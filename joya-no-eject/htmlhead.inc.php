@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta charset="utf-8">
-	<title>除夜のEject 2012</title>
+	<title>除夜のEject <?php print $yuku_year; ?></title>
 	<style type="text/css">
 *{margin:0;padding:0;}
 #wrapper{
@@ -56,7 +56,7 @@ div.block{
 <body>
 <div id="wrapper">
 	<div id="header">
-		<h1><img src="title.png" alt="除夜のEject 2012"></h1>
+		<h1><img src="title.png" alt="除夜のEject <?php print $yuku_year; ?>"></h1>
 		<div id="social">
 			<a href="http://b.hatena.ne.jp/entry/http://eject.kokuda.org/joya/" class="hatena-bookmark-button" data-hatena-bookmark-layout="standard" title="このエントリーをはてなブックマークに追加"><img src="http://b.st-hatena.com/images/entry-button/button-only.gif" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="http://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
 			<a href="http://twitter.com/share" class="twitter-share-button" data-count="horizontal">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>

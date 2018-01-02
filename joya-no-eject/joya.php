@@ -1,5 +1,5 @@
 <?php
-//   除夜のEject     (c) 2012 Akkiesoft.
+//   除夜のEject     Akkiesoft
 // -----------------------------------------------------------------------------
 
 include 'common.php';
@@ -65,7 +65,7 @@ EOM;
 }
 
 $ejectcount = intval(file_get_contents('count.dat'));
-if ($ejectcount > 108) {
+if ($ejectcount > $limit - 1) {
 	include 'htmlhead.inc.php';
 	print <<<EOM
 <h2>終了してしまった模様</h2>
@@ -97,11 +97,11 @@ EOM;
 	}
 	$ejectcount++;
 	file_put_contents('count.dat', $ejectcount, LOCK_EX);
-	file_get_contents("http://192.168.29.102/cdtray.php?api=1&tray=1");
+	file_get_contents($eject_url);
 	include 'htmlhead.inc.php';
 	print <<<EOM
 <h2>鐘をつきました</h2>
-<p>2013年が良い年になりますように！</p>
+<p>{$kuru_year}年が良い年になりますように！</p>
 <p style="margin-top:2em;"><a href="javascript:void(0)" onClick="window.close('joya')">このウィンドウを閉じる</a></p>
 EOM;
 	include 'htmlfoot.inc.php';
@@ -140,7 +140,7 @@ function countStr(event){
 				のこり文字数: <span id="cnt">115</span><br>
 				<input type="submit" name="send" id="send" value="ツイートしてEjectする" />
 			</form>
-			<p>※Ejectはすぐに実行されるので、Ustream画面を予め表示した状態で実行してください。</p>
+			<p>※Ejectはすぐに実行されるので、ライブ画面を予め表示した状態で実行してください。</p>
 		</div>
 
 <?php include "htmlfoot.inc.php"; ?>
