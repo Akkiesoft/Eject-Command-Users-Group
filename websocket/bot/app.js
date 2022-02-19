@@ -1,7 +1,7 @@
 // app.js (bot)
 
 var io = require('socket.io-client');
-var socket = io.connect('http://d250g2.com:3980');
+var socket = io('http://d250g2.com:3980');
 
 // GPIOの用意
 var pin = 11;
