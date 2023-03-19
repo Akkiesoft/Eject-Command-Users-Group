@@ -1,0 +1,6 @@
+[ejectzero]
+ejectzero.local
+
+[ejectzero:vars]
+ansible_user=akkie
+ansible_python_interpreter=/usr/bin/python3

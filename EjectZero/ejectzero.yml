@@ -1,0 +1,74 @@
+- name: constrct EjectZeto
+  hosts: ejectzero
+  gather_facts: no
+  tasks:
+    - name: install packages
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+        name:
+          - nginx
+          - python3-pip
+      become: yes
+    - name: install python module
+      pip:
+        name: python-socketio[client]
+      become: yes
+    - name: copy files
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        mode: "{{ item.mode }}"
+        owner: "{{ item.owner }}"
+        group: "{{ item.owner }}"
+      loop:
+        - src: ejectzero.py
+          dest: "/home/{{ ansible_user }}"
+          mode: "0755"
+          owner: "{{ ansible_user }}"
+        - src: config.py
+          dest: "/home/{{ ansible_user }}"
+          mode: "0644"
+          owner: "{{ ansible_user }}"
+        - src: index.html
+          dest: /var/www/html
+          mode: "0644"
+          owner: "{{ ansible_user }}"
+        - src: mugiko.png
+          dest: /var/www/html
+          mode: "0644"
+          owner: "{{ ansible_user }}"
+        - src: Sketch_Block.ttf
+          dest: /var/www/html
+          mode: "0644"
+          owner: "{{ ansible_user }}"
+      become: yes
+    - name: copy nginx site config
+      copy:
+        src: default
+        dest: /etc/nginx/sites-available
+        mode: "0644"
+      become: yes
+      notify: reload nginx
+    - name: copy systemd service file
+      template:
+        src: ejectzero.service
+        dest: /etc/systemd/system
+        mode: "0644"
+      become: yes
+    - name: enable and start services
+      systemd:
+        daemon_reload: yes
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - ejectzero
+        - nginx
+      become: yes
+  handlers:
+    - name: reload nginx
+      systemd:
+        name: nginx
+        state: reloaded
+      become: yes
