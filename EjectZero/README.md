@@ -6,7 +6,7 @@ WebSocketのBotも同時に動きます。
 
 ## 別途必要
 
-Sketch_Block.ttf: http://www.dafont.com/sketch-block.font (←これほんとにフリーなのか？)
+Sketch_Block.ttf: https://www.dafont.com/sketch-block.font (←これほんとにフリーなのか？)
 
 ## インストール
 
