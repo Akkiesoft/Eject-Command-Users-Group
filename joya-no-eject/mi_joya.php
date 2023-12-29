@@ -16,24 +16,19 @@ EOM;
 	include 'htmlfoot.inc.php';
 	exit();
 }
-$app = json_decode(file_get_contents("don_servers/".$domain));
 
-if (isset($_GET['code'])) {
-	$data = array(
-		"grant_type"    => "authorization_code",
-		"redirect_uri"  => $don_callback,
-		"client_id"     => $app->client_id,
-		"client_secret" => $app->client_secret,
-		"code"          => $_GET['code']
-	);
+if (isset($_GET['session'])) {
+    $session_id = $_GET['session'];
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_POST, true);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-	curl_setopt($ch, CURLOPT_URL, $scheme."://".$domain."/oauth/token");
+	curl_setopt($ch, CURLOPT_POSTFIELDS, '{}');
+	curl_setopt($ch, CURLOPT_URL, $scheme."://".$domain."/api/miauth/".$session_id."/check");
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 	$result = json_decode(curl_exec($ch));
 	curl_close($ch);
-	$_SESSION['token'] = $result->access_token;
+	$_SESSION['token'] = $result->token;
+	$_SESSION['user'] = $result->user;
 }
 
 $ejectcount = intval(file_get_contents('count.dat'));
@@ -49,18 +44,20 @@ EOM;
 }
 
 if (isset($_POST['send'])) {
-	/* Mastodonに投稿 */
+	/* Misskeyに投稿 */
 	$countstr = sprintf('%03d', $ejectcount);
-	$toot = array('status' => '[除夜のEject'.$countstr.'回目]'.$_POST['toot'].' #EJUG');
+	$note = json_encode(array(
+		'i' => $_SESSION['token'],
+		'text' => '[除夜のEject'.$countstr.'回目]'.$_POST['note'].' #EJUG'
+	));
 	try {
-		$header = ['Authorization: Bearer '.$_SESSION['token']];
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $scheme."://".$domain."/api/v1/statuses");
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+		curl_setopt($ch, CURLOPT_URL, $scheme."://".$domain."/api/notes/create");
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
 		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($toot));
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $note);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-		curl_exec($ch);
+		$result = json_decode(curl_exec($ch));
 		curl_close($ch);
 	} catch (Exception $e) {
 		/* Error */
@@ -91,19 +88,19 @@ EOM;
 include "htmlhead.inc.php"
 ?>
 
-		<h2>トゥートしてEjectを実行する</h2>
+		<h2>ノートしてEjectを実行する</h2>
 		<div class="block">
-			今年一年への想いや来年に向けての抱負をトゥートに込めて、Ejectしてください(495文字以内)。
+			今年一年への想いや来年に向けての抱負をノートに込めて、Ejectしてください(495文字以内)。
 			<script type="text/javascript">
 function countStr(event){
-	var toot = document.getElementById("tweet");
+	var note = document.getElementById("tweet");
 	var send = document.getElementById("send");
 	var cnt  = document.getElementById("cnt");
-	tootCnt  = toot.value.length;
+	noteCnt  = note.value.length;
 	evType   = event.type;
 
-	cnt.innerHTML = 495 - tootCnt;
-	if (tootCnt > 495) {
+	cnt.innerHTML = 495 - noteCnt;
+	if (noteCnt > 495) {
 		send.disabled = true;
 		cnt.style.color = 'red';
 	} else {
@@ -113,12 +110,11 @@ function countStr(event){
 }
 			</script>
 
-			<form action="don_joya.php" method="post">
-				<textarea name="toot" id="tweet" onchange="countStr(event)" onkeyup="countStr(event)"></textarea><br>
+			<form action="mi_joya.php" method="post">
+				<textarea name="note" id="tweet" onchange="countStr(event)" onkeyup="countStr(event)"></textarea><br>
 				のこり文字数: <span id="cnt">495</span><br>
-				<input type="submit" name="send" id="send" value="トゥートしてEjectする" />
+				<input type="submit" name="send" id="send" value="ノートしてEjectする" />
 			</form>
 			<p>※Ejectはすぐに実行されるので、ライブ画面を予め表示した状態で実行してください。</p>
 		</div>
-
 <?php include "htmlfoot.inc.php"; ?>
